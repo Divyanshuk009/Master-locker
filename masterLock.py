@@ -696,8 +696,9 @@ class VaultLockMasterApp:
     def __init__(self, initial_path: str | None = None):
         self.root = tk.Tk()
         self.root.title(APP_TITLE)
-        self.root.geometry("680x550")
-        self.root.resizable(False, False)
+        self.root.geometry("700x650")
+        self.root.minsize(620, 620)
+        self.root.resizable(True, True)
         self.root.configure(bg="#0f172a")
 
         self.ui_queue: queue.Queue = queue.Queue()
@@ -740,8 +741,9 @@ class VaultLockMasterApp:
         fg = "#f8fafc"
         muted = "#94a3b8"
 
+        # Header
         hdr = tk.Frame(self.root, bg=bg)
-        hdr.pack(fill="x", padx=24, pady=(18, 12))
+        hdr.pack(side="top", fill="x", padx=24, pady=(18, 12))
         tk.Label(hdr, text="🔒 VaultLock Master", font=("Segoe UI", 19, "bold"), bg=bg, fg=fg).pack(side="left")
 
         tk.Button(
@@ -776,7 +778,7 @@ class VaultLockMasterApp:
 
         # 4 Navigation Tabs
         tabs = tk.Frame(self.root, bg=card)
-        tabs.pack(fill="x", padx=24)
+        tabs.pack(side="top", fill="x", padx=24)
 
         self.tab_buttons = {}
         tab_defs = [
@@ -798,12 +800,20 @@ class VaultLockMasterApp:
             btn.pack(side="left", fill="x", expand=True)
             self.tab_buttons[key] = btn
 
+        # Footer anchored at bottom so it is never pushed off-screen
+        ftr = tk.Frame(self.root, bg=bg)
+        ftr.pack(side="bottom", fill="x", padx=24, pady=(6, 14))
+        self.progress = ttk.Progressbar(ftr, mode="determinate", maximum=100)
+        self.progress.pack(fill="x")
+        tk.Label(ftr, textvariable=self.status_var, font=("Segoe UI", 9), bg=bg, fg=muted).pack(anchor="w", pady=(4, 0))
+
         # Body Card
         body = tk.Frame(self.root, bg=card, padx=22, pady=18)
-        body.pack(fill="both", expand=True, padx=24, pady=(10, 10))
+        body.pack(side="top", fill="both", expand=True, padx=24, pady=(10, 6))
 
-        self.lbl_desc = tk.Label(body, text="", font=("Segoe UI", 9), bg=card, fg="#34d399")
+        self.lbl_desc = tk.Label(body, text="", font=("Segoe UI", 9), bg=card, fg="#34d399", justify="left")
         self.lbl_desc.pack(anchor="w", pady=(0, 10))
+        body.bind("<Configure>", lambda e: self.lbl_desc.configure(wraplength=max(300, e.width - 48)))
 
         tk.Label(body, text="1. Select File, Image, Video, or Folder:", font=("Segoe UI", 10, "bold"), bg=card, fg=fg).pack(anchor="w")
         row1 = tk.Frame(body, bg=card)
@@ -870,13 +880,7 @@ class VaultLockMasterApp:
             cursor="hand2",
             command=self._on_submit,
         )
-        self.btn_action.pack(fill="x")
-
-        ftr = tk.Frame(self.root, bg=bg)
-        ftr.pack(fill="x", padx=24, pady=(0, 14))
-        self.progress = ttk.Progressbar(ftr, mode="determinate", maximum=100)
-        self.progress.pack(fill="x")
-        tk.Label(ftr, textvariable=self.status_var, font=("Segoe UI", 9), bg=bg, fg=muted).pack(anchor="w", pady=(4, 0))
+        self.btn_action.pack(fill="x", pady=(4, 0))
 
     def _switch_tab(self, mode: str):
         self.mode.set(mode)
@@ -918,6 +922,14 @@ class VaultLockMasterApp:
             self.lbl_desc.configure(text="Permanently unlocks the item and deletes '<Name> Lock.exe' and its .vlock key.", fg="#f87171")
             self.lbl_pwd.configure(text="2. Enter Current Password to Remove Lock:")
             self.btn_action.configure(text="🗑️ REMOVE PASSWORD & DELETE TOGGLE .EXE", bg="#dc2626", activebackground="#b91c1c")
+
+        # Auto-expand window height if needed so the action button is never clipped
+        self.root.update_idletasks()
+        req_h = self.root.winfo_reqheight()
+        cur_w = self.root.winfo_width()
+        cur_h = self.root.winfo_height()
+        if cur_h < req_h + 12:
+            self.root.geometry(f"{max(cur_w, 700)}x{req_h + 16}")
 
     def _toggle_pwd(self):
         ch = "" if self.show_pwd.get() else "•"
