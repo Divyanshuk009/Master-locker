@@ -88,4 +88,4 @@ You can run all operations directly from Command Prompt or PowerShell using eith
 
 ## License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open-source
