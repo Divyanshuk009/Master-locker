@@ -10,23 +10,26 @@ On first lock, VaultLock generates a standalone **`<ItemName> Lock.exe`** right 
 
 ## Key Features
 
-* **Instant In-Place Locking (`< 0.1s`):** Locks folders and files of any size (including large multi-GB video folders) using Windows NTFS Access Control Lists (`icacls`) without moving, renaming, or deleting any files inside.
-* **One-Click Companion Toggle (`<Name> Lock.exe`):** Automatically compiles a tiny (~16 KB) native Windows executable beside each protected item for effortless one-click locking and password-protected unlocking.
-* **Master Control Panel:** Manage all locked items from a single dark-mode interface—set up new locks, unlock items, change passwords, or remove locks cleanly.
-* **One-Click Standalone `.exe` Builder:** Includes a built-in **Build Master .exe** button that packages `masterLock.py` into a standalone `VaultLock.exe` (no terminal required).
+* **Zero-Install Standalone Executable (`VaultLock.exe`):** Download and run directly on Windows 10/11 without installing Python or external packages.
+* **Instant In-Place Locking (`< 0.1s`):** Locks folders and files of any size (including multi-GB video folders) using Windows NTFS Access Control Lists (`icacls`) without moving, renaming, or deleting any internal files.
+* **One-Click Companion Toggle (`<ItemName> Lock.exe`):** Automatically compiles a lightweight (~16 KB) native Windows executable beside each protected item for effortless one-click locking and password-protected unlocking.
+* **Master Control Panel:** Manage all locked items from a single resizable dark-mode interface—set up new locks, unlock items, change passwords, or remove locks cleanly.
 * **Windows Explorer Integration:** Add **Manage Lock with VaultLock** directly to your Windows right-click context menu in one click.
-* **Full GUI & CLI Support:** Use the visual interface or automate lock/unlock/password workflows from Command Prompt or PowerShell.
+* **Full GUI & CLI Support:** Use the visual interface or automate lock, unlock, and password workflows from Command Prompt or PowerShell.
 * **Salted PBKDF2-HMAC-SHA256 Password Verification:** Passwords are never stored in plain text; every `.vlock` key file uses a unique 16-byte cryptographic salt and 200,000 PBKDF2-HMAC-SHA256 iterations.
 
 ## Quick Start
 
-### Prerequisites
+### Option 1: Download & Run `VaultLock.exe` Directly (Recommended — No Python Needed)
 
-* **OS:** Windows 10 or Windows 11
-* **Python:** Python 3.8+ (with standard `tkinter` included)
-* *(Optional)* **PyInstaller:** Only needed if you want to compile `masterLock.py` into a standalone `VaultLock.exe` (`pip install pyinstaller`).
+1. Download **`VaultLock.exe`** from the repository files or the **Releases** page.
+2. Double-click **`VaultLock.exe`** to launch the Master Control Panel.
+   * *Note on Windows SmartScreen:* Because `VaultLock.exe` is a community open-source binary without a paid code-signing certificate, Windows Defender SmartScreen may show *"Windows protected your PC"* on the first launch. Click **More info** -> **Run anyway** to proceed.
+3. *(Optional)* Click **Right-Click Menu** in the top-right corner of the app to add **Manage Lock with VaultLock** to your Windows File Explorer context menu.
 
-### 1. Clone & Run from Source
+### Option 2: Run from Python Source
+
+* **Requirements:** Windows 10 or Windows 11, Python 3.8+ (includes `tkinter`).
 
 ```bash
 git clone https://github.com/<your-username>/<your-repo-name>.git
@@ -34,11 +37,7 @@ cd <your-repo-name>
 python masterLock.py
 ```
 
-### 2. Build Standalone `VaultLock.exe` (Optional)
-
-1. Launch `python masterLock.py`.
-2. Click **Build Master .exe** in the top-right corner.
-3. Wait ~20 seconds for `VaultLock.exe` to compile in the same directory. It will also automatically register the Windows Explorer right-click menu.
+To build your own standalone `VaultLock.exe` from source, click **Build Master .exe** inside the app (requires `pip install pyinstaller`).
 
 ## Usage Guide
 
@@ -51,34 +50,34 @@ python masterLock.py
    * Your item is locked immediately, and **`<ItemName> Lock.exe`** + **`<ItemName>.vlock`** are created beside it.
 
 2. **Daily One-Click Toggle (`<ItemName> Lock.exe`):**
-   * **To Unlock:** Double-click **`<ItemName> Lock.exe`**, enter your password, and press **Enter** (automatically opens the folder/file if *"Open after unlock"* is checked).
+   * **To Unlock:** Double-click **`<ItemName> Lock.exe`**, enter your password, and press **Enter** (automatically opens the folder or file if *"Open after unlock"* is checked).
    * **To Re-Lock:** Double-click **`<ItemName> Lock.exe`** again—it locks immediately with a brief confirmation toast.
 
 3. **Change Password (`Change Password` tab):**
-   * Select the item (or its `.vlock` / `Lock.exe` file), enter your current password and new password, and click **UPDATE PASSWORD**. Both the Master app and `<ItemName> Lock.exe` immediately enforce the new password.
+   * Select the item (or its `.vlock` / `Lock.exe` file), enter your current password and new password, and click **UPDATE PASSWORD**. Both `VaultLock.exe` and `<ItemName> Lock.exe` immediately enforce the new password.
 
 4. **Remove Lock (`Remove Lock` tab):**
    * Select the item, enter your password, and click **REMOVE PASSWORD & DELETE TOGGLE .EXE** to permanently restore permissions and delete the `.vlock` and `<ItemName> Lock.exe` files.
 
 ### Command-Line Interface (CLI)
 
-You can run all operations directly from Command Prompt or PowerShell using either `python masterLock.py` or `VaultLock.exe`:
+Run any command from Command Prompt or PowerShell using either `VaultLock.exe` or `python masterLock.py`:
 
 | Action | Command |
 | :--- | :--- |
-| **Lock & create toggle `.exe`** | `python masterLock.py lock "D:\Media\PrivateFolder" -p yourpassword` |
-| **Unlock item** | `python masterLock.py unlock "D:\Media\PrivateFolder" -p yourpassword` |
-| **Change password** | `python masterLock.py change-password "D:\Media\PrivateFolder" -p oldpass -n newpass` |
-| **Remove lock & toggle `.exe`** | `python masterLock.py remove-lock "D:\Media\PrivateFolder" -p newpass` |
-| **Open specific item in GUI** | `python masterLock.py "D:\Media\PrivateFolder"` |
+| **Lock & create toggle `.exe`** | `VaultLock.exe lock "D:\Media\PrivateFolder" -p yourpassword` |
+| **Unlock item** | `VaultLock.exe unlock "D:\Media\PrivateFolder" -p yourpassword` |
+| **Change password** | `VaultLock.exe change-password "D:\Media\PrivateFolder" -p oldpass -n newpass` |
+| **Remove lock & toggle `.exe`** | `VaultLock.exe remove-lock "D:\Media\PrivateFolder" -p newpass` |
+| **Open specific item in GUI** | `VaultLock.exe "D:\Media\PrivateFolder"` |
 
-> **Tip:** Omit `-p` / `-n` flags in CLI mode to be prompted securely without echoing passwords in terminal history.
+> **Tip:** Omit `-p` / `-n` flags in CLI mode to be prompted securely without saving passwords in your terminal history.
 
 ## How It Works
 
-1. **Access Control:** VaultLock applies explicit NTFS `Deny` permissions (`icacls /deny *S-1-1-0:(OI)(CI)(F)`) on the target path, blocking unauthorized browsing, copying, or deletion in Windows Explorer and Command Prompt while leaving internal files untouched.
+1. **NTFS Access Control:** VaultLock applies explicit NTFS `Deny` permissions (`icacls /deny *S-1-1-0:(OI)(CI)(F)`) on the target path, blocking unauthorized browsing, copying, or deletion in Windows Explorer and Command Prompt while leaving internal files untouched.
 2. **Metadata & Verification:** A companion `<ItemName>.vlock` JSON file stores the lock state (`locked: true/false`), random 16-byte salt, and PBKDF2-HMAC-SHA256 hash.
-3. **Native Toggle Compilation:** When locking an item for the first time, VaultLock invokes Windows' built-in .NET C# compiler (`csc.exe`) to compile a self-contained WinForms toggle executable (`<ItemName> Lock.exe`) tailored to that item—requiring zero Python runtime dependencies on the machine to lock or unlock.
+3. **Native Toggle Compilation:** When locking an item for the first time, VaultLock invokes Windows' built-in .NET C# compiler (`csc.exe`) to compile a self-contained WinForms toggle executable (`<ItemName> Lock.exe`) tailored to that item.
 
 ## Important Notes
 
@@ -88,4 +87,4 @@ You can run all operations directly from Command Prompt or PowerShell using eith
 
 ## License
 
-This project is open-source
+This project is open-source and available under the [MIT License](LICENSE).
