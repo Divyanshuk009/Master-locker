@@ -32,8 +32,8 @@ On first lock, VaultLock generates a standalone **`<ItemName> Lock.exe`** right 
 * **Requirements:** Windows 10 or Windows 11, Python 3.8+ (includes `tkinter`).
 
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/Divyanshuk009/Master-locker.git
+cd Master-locker
 python masterLock.py
 ```
 
@@ -87,4 +87,4 @@ Run any command from Command Prompt or PowerShell using either `VaultLock.exe` o
 
 ## License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is open-source.
